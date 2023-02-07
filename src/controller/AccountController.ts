@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import { AccountBusiness } from "../business/AccountBusiness"
+import { BaseError } from "../errors/BaseError"
 
 export class AccountController {
     public getAccounts = async (req: Request, res: Response) => {
@@ -34,14 +35,10 @@ export class AccountController {
         } catch (error) {
             console.log(error)
     
-            if (req.statusCode === 200) {
-                res.status(500)
-            }
-    
-            if (error instanceof Error) {
-                res.send(error.message)
+            if (error instanceof BaseError) {
+                res.status(error.statusCode).send(error.message)
             } else {
-                res.send("Erro inesperado")
+                res.status(500).send("Erro inesperado")
             }
         }
     }
@@ -50,7 +47,7 @@ export class AccountController {
         try {
             const input = {
                 id: req.body.id,
-                ownerId: req.body.owner_id
+                ownerId: req.body.ownerId
             }
 
             const accountBusiness = new AccountBusiness()
