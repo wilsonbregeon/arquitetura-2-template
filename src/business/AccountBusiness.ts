@@ -1,4 +1,5 @@
 import { AccountDatabase } from "../database/AccountDatabase"
+import { NotFoundError } from "../errors/NotFoundError"
 import { Account } from "../models/Account"
 import { AccountDB } from "../types"
 
@@ -22,7 +23,7 @@ export class AccountBusiness {
         const accountDB = await accountDatabase.findAccountById(id)
 
         if (!accountDB) {
-            throw new Error("'id' não encontrado")
+            throw new NotFoundError("Usuário não encontrado")
         }
 
         const account = new Account(
